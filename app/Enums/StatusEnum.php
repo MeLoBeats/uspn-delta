@@ -1,5 +1,7 @@
 <?php
 
+namespace App\Enums;
+
 enum StatusEnum: string
 {
     case PENDING = 'pending';

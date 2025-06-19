@@ -31,14 +31,13 @@ class PortRequest extends Model
      *
      * @return string
      */
-    public function getStatusLabel(): string
+    public function getStatusLabelAttribute(): string
     {
-        // Use StatusEnum to get the label for the status
         return match ($this->status) {
-            'pending' => 'En attente',
+            'pending'  => 'En attente',
             'approved' => 'Approuvée',
             'rejected' => 'Rejetée',
-            default => 'Unknown',
+            default    => 'Inconnu',
         };
     }
 }

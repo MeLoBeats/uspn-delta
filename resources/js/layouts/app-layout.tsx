@@ -5,7 +5,7 @@ function AppLayout({ children }: PropsWithChildren) {
     return (
         <>
             <AppNavbar />
-            <div>{children}</div>
+            <div className='xl:px-20 px-14 mt-24 py-14'>{children}</div>
         </>
     )
 }

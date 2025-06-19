@@ -2,13 +2,31 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\PortRequestResource;
+use App\Models\PortRequest;
 use Illuminate\Http\Request;
 
 class PortRequestController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        // Logic to list port requests
+        $search = $request->input('search');
+        $searchFields = ['fqdn', 'ip', 'vlan'];
+
+        $query = PortRequest::query();
+
+        if ($search) {
+            $query->where(function ($q) use ($search, $searchFields) {
+                foreach ($searchFields as $field) {
+                    $q->orWhere($field, 'like', "%{$search}%");
+                }
+            });
+        }
+
+        $requests = $query->paginate()->withQueryString();
+        $resource = PortRequestResource::collection($requests);
+
+        return inertia('requests/index', ["requests" => $resource]);
     }
 
     public function show($id)

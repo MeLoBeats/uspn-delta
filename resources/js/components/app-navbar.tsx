@@ -18,8 +18,8 @@ const navLinks: NavbarLink[] = [
 
 function AppNavbar() {
   return (
-    <div className='w-full h-24 bg-primary'>
-      <div className='w-full h-full px-4 flex items-center justify-around'>
+    <div className='w-full h-24 bg-primary fixed top-0 left-0 z-20'>
+      <div className='w-full h-full xl:px-20 px-14 flex items-center justify-between'>
         {/* Nav Logo */}
         <div>
           <AppLogo />
