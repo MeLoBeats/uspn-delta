@@ -41,15 +41,27 @@ export interface UserRequest {
     [key: string]: unknown; // This allows for additional properties...
 }
 
+export interface StoreUserRequest {
+    ip_address: string;
+    fqdn: string;
+    ports: UserPortRequest[];
+    exposed: boolean;
+    vlan?: string;
+    description?: string;
+}
+
 export interface UserPortRequest {
     name: string;
     port: string;
-    protocol: "tcp" | "udp" | "all";
+    protocol: ProtocolType;
 }
+
+export type ProtocolType = "tcp" | "udp" | "all"
 
 export interface NavbarLink {
     name: string;
     href: string;
+    direct?: boolean;
     active: boolean;
 }
 
@@ -67,12 +79,6 @@ export interface SharedData {
 }
 
 export interface User {
-    id: number;
-    name: string;
+    full_name: string;
     email: string;
-    avatar?: string;
-    email_verified_at: string | null;
-    created_at: string;
-    updated_at: string;
-    [key: string]: unknown; // This allows for additional properties...
 }

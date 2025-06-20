@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\PortRequest as RequestsPortRequest;
 use App\Http\Resources\PortRequestResource;
 use App\Models\PortRequest;
 use Illuminate\Http\Request;
@@ -23,7 +24,7 @@ class PortRequestController extends Controller
             });
         }
 
-        $requests = $query->paginate()->withQueryString();
+        $requests = $query->orderBy('created_at', 'desc')->paginate()->withQueryString();
         $resource = PortRequestResource::collection($requests);
 
         return inertia('requests/index', ["requests" => $resource]);
@@ -36,11 +37,20 @@ class PortRequestController extends Controller
 
     public function create()
     {
-        // Logic to show the form for creating a new port request
+        return inertia('requests/create');
     }
 
-    public function store(Request $request)
+    public function store(RequestsPortRequest $request)
     {
+        $portRequest = new PortRequest([
+            "ip_address" => $request->ip_address,
+            "fqdn" => $request->fqdn,
+            "ports" => json_encode($request->ports),
+            "vlan" => $request->vlan,
+            "description" => $request->description,
+        ]);
+        $portRequest->save();
+        return redirect(route('request.index'));
         // Logic to store a new port request
     }
 

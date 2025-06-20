@@ -1,8 +1,9 @@
 <?php
 
+use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PortRequestController;
+use App\Http\Middleware\CasAuth;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 
 Route::get('/', function () {
     return redirect()->route('request.index');
@@ -18,4 +19,9 @@ Route::resource('demandes', PortRequestController::class)
         'edit' => 'request.edit',
         'update' => 'request.update',
         'destroy' => 'request.destroy',
-    ]);
+    ])
+    ->middleware(CasAuth::class);
+
+Route::get('/deconnexion', [AuthController::class, "logout"])
+    ->middleware(CasAuth::class)
+    ->name('auth.logout');

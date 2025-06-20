@@ -33,7 +33,7 @@ const TablePagination = ({ meta }: { meta: MetaPagination }) => (
                 </PaginationItem>
             )}
             {meta.links.slice(1, -1).map((l) => (
-                <PaginationItem className={cn(l.active ? "bg-secondary text-white rounded-md" : "")}>
+                <PaginationItem key={l.url} className={cn(l.active ? "bg-secondary text-white rounded-md" : "")}>
                     <PaginationLink href={l.url!}>{l.label}</PaginationLink>
                 </PaginationItem>
             ))}

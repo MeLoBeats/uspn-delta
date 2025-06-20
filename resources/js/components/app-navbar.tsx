@@ -12,7 +12,8 @@ const navLinks: NavbarLink[] = [
   {
     name: 'Déconnexion',
     href: '/deconnexion',
-    active: false
+    active: false,
+    direct: true,
   },
 ]
 
@@ -27,7 +28,7 @@ function AppNavbar() {
         {/* Nav Links */}
         <ul className='flex items-center h-full'>
           {navLinks.map((link) => (
-            <NavLink key={link.name} name={link.name} href={link.href} active={link.active} />
+            <NavLink direct={link.direct ?? false} key={link.name} name={link.name} href={link.href} active={link.active} />
           ))}
         </ul>
       </div>

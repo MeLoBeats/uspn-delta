@@ -22,4 +22,13 @@ export default defineConfig({
             'ziggy-js': resolve(__dirname, 'vendor/tightenco/ziggy'),
         },
     },
+    server: {
+        host: 'dev.univ-paris13.fr',
+        port: 5173,
+        allowedHosts: true,
+        cors: {
+            origin: 'http://dev.univ-paris13.fr:8000',
+            credentials: true,
+        }
+    },
 });

@@ -11,7 +11,7 @@ class PortRequest extends FormRequest
      */
     public function authorize(): bool
     {
-        return false;
+        return true;
     }
 
     /**
@@ -27,9 +27,9 @@ class PortRequest extends FormRequest
             "ports" => "required|array",
             "ports.*.port" => "required|integer|min:1|max:65535",
             "ports.*.name" => "required|string|max:255",
-            "ports.*.protocol" => "required|string|in:TCP,UDP",
+            "ports.*.protocol" => "required|string|in:tcp,udp,all",
             "exposed" => "boolean",
-            "vlan" => "nullable|string|max:255",
+            "vlan" => "required_if:exposed,false|string|max:255",
             "description" => "nullable|string|max:1000",
         ];
     }
