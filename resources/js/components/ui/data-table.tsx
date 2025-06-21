@@ -70,7 +70,7 @@ export function DataTable<TData, TValue>({
                         <TableRow key={headerGroup.id}>
                             {headerGroup.headers.map((header) => {
                                 return (
-                                    <TableHead className="text-primary font-semibold text-center py-7 text-[16px]" key={header.id}>
+                                    <TableHead className="text-primary font-semibold text-center py-4 text-[16px]" key={header.id}>
                                         {header.isPlaceholder
                                             ? null
                                             : flexRender(
@@ -107,7 +107,7 @@ export function DataTable<TData, TValue>({
                     )}
                 </TableBody>
             </Table>
-            {meta && (
+            {(meta && meta.total == meta.current_page) && (
                 <TablePagination meta={meta} />
             )}
         </div>

@@ -29,6 +29,7 @@ class PortRequestFactory extends Factory
             'exposed' => $this->faker->boolean,
             'vlan' => $this->faker->optional()->word,
             'description' => $this->faker->optional()->sentence,
+            'user_id' => $this->faker->numberBetween(1, 49)
         ];
     }
 }

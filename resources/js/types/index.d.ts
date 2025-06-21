@@ -1,3 +1,4 @@
+import { status } from '@/lib/constants';
 import type { Config } from 'ziggy-js';
 
 export interface ResourceData<T> {
@@ -26,6 +27,16 @@ export interface MetaPagination {
     total: number;
 }
 
+export type StatusType = {
+    value: "pending" | "approved" | "rejected";
+    label: "En attente" | "Approuvée" | "Rejetée"
+}
+
+export type StatusKey = keyof typeof status
+export type StatusValue = typeof status[StatusKey]['value']
+export type StatusLabel = typeof status[StatusKey]['label']
+
+
 export interface UserRequest {
     id: number;
     ipAddress: string;
@@ -33,8 +44,10 @@ export interface UserRequest {
     status: string;
     reason?: string;
     exposed: boolean;
+    exposedLabel: string;
     vlan?: string;
     ports: UserPortRequest[];
+    user: Pick<User, "full_name">;
     description?: string;
     createdAt: string;
     updatedAt: string;
@@ -71,14 +84,17 @@ export interface Auth {
 
 export interface SharedData {
     name: string;
-    quote: { message: string; author: string };
     auth: Auth;
+    flash: {
+        error: string;
+        success: string;
+    }
     ziggy: Config & { location: string };
-    sidebarOpen: boolean;
     [key: string]: unknown;
 }
 
 export interface User {
     full_name: string;
     email: string;
+    admin: boolean;
 }

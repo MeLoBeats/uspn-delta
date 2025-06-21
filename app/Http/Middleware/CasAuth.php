@@ -34,11 +34,12 @@ class CasAuth
                 'email' => $email,
             ]
         );
-
-        Auth::login($user); // <- Optionnel si tu veux l’authentifier via Laravel
-
+        if (!Auth::check()) {
+            Auth::login($user); // <- Optionnel si tu veux l’authentifier via Laravel
+        }
         // Optionnel : stocker dans la session si nécessaire
         session(['cas_user' => $casUser]);
+
         return $next($request);
     }
 }

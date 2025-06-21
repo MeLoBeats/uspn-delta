@@ -12,7 +12,6 @@ import { ProtocolType, UserPortRequest } from '@/types'
 import { useState } from 'react'
 import FormInput from '../form-input'
 import FormSelect from '../form-select'
-import { toast } from 'sonner'
 
 interface CreateRequestDialogProps {
     open: boolean
@@ -123,11 +122,6 @@ function CreateRequestDialog({ open, openChange }: CreateRequestDialogProps) {
                 openChange(false)
                 reset()
                 setPorts([initialPort])
-                toast.success("Votre demande à bien été envoyée", {
-                    position: "top-right",
-                    richColors: true,
-                    duration: 5000
-                })
             }
         }) // adapte la route à ton backend
     }

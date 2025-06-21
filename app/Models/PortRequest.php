@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class PortRequest extends Model
 {
@@ -25,6 +26,11 @@ class PortRequest extends Model
         'ports' => 'array', // Assuming ports is a JSON encoded array
         'exposed' => 'boolean',
     ];
+
+    public function user(): BelongsTo
+    {
+        return $this->belongsTo(User::class);
+    }
 
     /**
      * Get the status of the port request. By statusEnum, it can be one of the following:

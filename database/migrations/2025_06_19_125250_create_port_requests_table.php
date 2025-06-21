@@ -1,6 +1,7 @@
 <?php
 
 use App\Enums\StatusEnum;
+use App\Models\User;
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -26,6 +27,8 @@ return new class extends Migration
             $table->string('vlan')->nullable()->comment('VLAN associated with the port request');
 
             $table->string('description')->nullable()->comment('Description of the port request');
+
+            $table->foreignIdFor(User::class)->constrained();
 
             $table->timestamps();
         });

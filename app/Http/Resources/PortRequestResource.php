@@ -25,11 +25,13 @@ class PortRequestResource extends JsonResource
             'statusLabel' => $this->status_label,
             'reason'      => $this->reason,
             'exposed'     => $this->exposed,
+            'exposedLabel'     => $this->exposed ? "Publique" : "Privée",
             'vlan'        => $this->vlan,
             'ports'       => json_decode($this->ports),
+            'user' => $this->user->full_name,
             'description' => $this->description,
-            'createdAt' => $this->created_at->format('Y-m-d'),
-            'updatedAt' => $this->updated_at->format('Y-m-d'),
+            'createdAt' => $this->created_at->format('d-m-Y'),
+            'updatedAt' => $this->updated_at->format('d-m-Y'),
         ];
     }
 }
