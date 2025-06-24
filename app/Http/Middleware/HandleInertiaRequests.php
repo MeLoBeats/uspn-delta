@@ -5,6 +5,7 @@ namespace App\Http\Middleware;
 use Illuminate\Foundation\Inspiring;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Log;
 use Inertia\Middleware;
 use Tighten\Ziggy\Ziggy;
 
@@ -42,16 +43,18 @@ class HandleInertiaRequests extends Middleware
             ...parent::share($request),
             'name' => config('app.name'),
             'auth' => [
-                'user' => Auth::user()
+                'user' => $request->session()->get('cas_user')
             ],
             'ziggy' => fn(): array => [
                 ...(new Ziggy)->toArray(),
                 'location' => $request->url(),
             ],
-            'flash' => [
-                "errors" => fn() => $request->session()->get('errors'),
-                "success" => fn() => $request->session()->get('success')
-            ]
+            'flash' => fn() => [
+                'success' => fn() => session()->get('success'),
+                'error'   => fn() => session()->get('error'),
+                'errors'  => fn() => session()->get('errors'),
+            ],
+
         ];
     }
 }

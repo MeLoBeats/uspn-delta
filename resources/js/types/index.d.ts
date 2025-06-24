@@ -84,7 +84,7 @@ export interface Auth {
 
 export interface SharedData {
     name: string;
-    auth: Auth;
+    auth: { user: string };
     flash: {
         error: string;
         success: string;

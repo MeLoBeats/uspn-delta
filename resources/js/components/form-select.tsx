@@ -7,6 +7,7 @@ import {
     SelectTrigger,
     SelectValue
 } from './ui/select'
+import { cn } from '@/lib/utils'
 
 type Props = {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
@@ -22,6 +23,7 @@ type Props = {
         value: string
     }[]
     castToBoolean?: boolean
+    wrapperClassName?: string
 }
 
 function FormSelect({
@@ -33,7 +35,8 @@ function FormSelect({
     label,
     data,
     required = false,
-    castToBoolean = false
+    castToBoolean = false,
+    wrapperClassName
 }: Props) {
     const handleChange = (v: string) => {
         const finalValue = castToBoolean ? v === 'true' : v
@@ -41,7 +44,7 @@ function FormSelect({
     }
 
     return (
-        <div className='w-full'>
+        <div className={cn('w-full', wrapperClassName)}>
             <Label htmlFor={id}>
                 {label}
                 {required && <span className='text-red-500 ml-1'>*</span>}

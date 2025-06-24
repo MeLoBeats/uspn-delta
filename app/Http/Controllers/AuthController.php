@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session;
 
 class AuthController extends Controller
 {
@@ -11,6 +12,7 @@ class AuthController extends Controller
     {
         Auth::logout();
         cas()->logout();
+        Session::remove("cas_user");
         return redirect('/');
     }
 }

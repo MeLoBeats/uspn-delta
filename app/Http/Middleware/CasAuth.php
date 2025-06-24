@@ -4,8 +4,10 @@ namespace App\Http\Middleware;
 
 use App\Models\User;
 use Closure;
+use Illuminate\Contracts\Session\Session;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Session as FacadesSession;
 use Symfony\Component\HttpFoundation\Response;
 
 class CasAuth
@@ -15,6 +17,9 @@ class CasAuth
      */
     public function handle(Request $request, Closure $next): Response
     {
+        if (FacadesSession::exists("cas_user")) {
+            return $next($request);
+        }
         if (!cas()->checkAuthentication()) {
             if ($request->ajax() || $request->wantsJson()) {
                 return response('Unauthorized', 401);

@@ -2,7 +2,9 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PortRequestController;
+use App\Http\Middleware\Admin;
 use App\Http\Middleware\CasAuth;
+use App\Models\PortRequest;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -19,9 +21,12 @@ Route::resource('demandes', PortRequestController::class)
         'edit' => 'request.edit',
         'update' => 'request.update',
         'destroy' => 'request.destroy',
-    ])
-    ->middleware(CasAuth::class);
+    ]);
+
+Route::get('/admin/demandes', function () {
+    $requests = PortRequest::all();
+    dd($requests);
+})->middleware(Admin::class);
 
 Route::get('/deconnexion', [AuthController::class, "logout"])
-    ->middleware(CasAuth::class)
     ->name('auth.logout');

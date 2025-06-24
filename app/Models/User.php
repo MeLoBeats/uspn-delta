@@ -28,4 +28,10 @@ class User extends Authenticatable
     {
         return $this->hasMany(PortRequest::class);
     }
+
+    public function is_admin(): bool
+    {
+        $isAdmin = AdminUsers::where('email', '=', $this->email)->first();
+        return $isAdmin->count() === 1;
+    }
 }

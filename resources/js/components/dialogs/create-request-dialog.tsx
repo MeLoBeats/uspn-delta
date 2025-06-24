@@ -43,6 +43,15 @@ const PortForm = ({ index, port, onChange, onRemove, isLast, isFirst, onAdd, err
                 placeholder='80'
                 required
             />
+            <FormInput
+                errors={errors}
+                label='Nom'
+                name={`ports.${index}.name`}
+                id={`ports.${index}.name`}
+                onChange={(e) => onChange(index, { name: e as string })}
+                value={port.name}
+                required
+            />
             <FormSelect
                 data={[{ label: "TCP", value: "tcp" }, { label: "UDP", value: "udp" }, { label: "TCP + UDP", value: "all" }]}
                 errors={errors}
@@ -51,15 +60,6 @@ const PortForm = ({ index, port, onChange, onRemove, isLast, isFirst, onAdd, err
                 label='Protocole'
                 onChange={(v) => onChange(index, { protocol: v as ProtocolType })}
                 value={port.protocol}
-                required
-            />
-            <FormInput
-                errors={errors}
-                label='Nom'
-                name={`ports.${index}.name`}
-                id={`ports.${index}.name`}
-                onChange={(e) => onChange(index, { name: e as string })}
-                value={port.name}
                 required
             />
             <Button type='button' onClick={onAdd} variant='ghost' disabled={!isLast}>
@@ -128,7 +128,7 @@ function CreateRequestDialog({ open, openChange }: CreateRequestDialogProps) {
 
     return (
         <Dialog open={open} onOpenChange={openChange}>
-            <DialogContent className='w-full !max-w-4xl max-h-screen'>
+            <DialogContent className='w-full sm:max-w-xl md:!max-w-2xl lg:!max-w-4xl max-h-screen'>
                 <DialogHeader className='border-b pb-2'>
                     <DialogTitle>Nouvelle demande</DialogTitle>
                     <DialogDescription>
@@ -138,9 +138,10 @@ function CreateRequestDialog({ open, openChange }: CreateRequestDialogProps) {
 
                 <form
                     onSubmit={handleSubmit}
-                    className='flex flex-col items-center justify-between space-y-5 overflow-y-auto max-h-[calc(100vh-12rem)]'
+                    className='flex flex-row flex-wrap items-center gap-2 space-y-2 lg:space-y-5 overflow-y-auto max-h-[calc(100vh-12rem)]'
                 >
                     <FormInput
+                        wrapperClassName='w-full lg:w-[49%]'
                         required
                         id="ip_address"
                         label="Adresse IP"
@@ -152,6 +153,7 @@ function CreateRequestDialog({ open, openChange }: CreateRequestDialogProps) {
                     />
 
                     <FormInput
+                        wrapperClassName='w-full lg:w-[49%]'
                         required
                         id="fqdn"
                         label="FQDN"
@@ -163,6 +165,7 @@ function CreateRequestDialog({ open, openChange }: CreateRequestDialogProps) {
                     />
 
                     <FormSelect
+                        wrapperClassName='w-full lg:w-[49%]'
                         data={[
                             {
                                 label: "Publique",
@@ -186,6 +189,7 @@ function CreateRequestDialog({ open, openChange }: CreateRequestDialogProps) {
                     {
                         !data.exposed && (
                             <FormInput
+                                wrapperClassName='w-full lg:w-[49%]'
                                 required
                                 id="vlan"
                                 label="VLAN"

@@ -161,4 +161,12 @@
     body {
         @apply bg-background text-foreground;
     }
+
+
+}
+
+@layer utilities {
+    .wrapper {
+        @apply xl:px-20 md:px-14 px-5
+    }
 }

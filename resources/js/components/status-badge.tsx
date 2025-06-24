@@ -3,9 +3,11 @@ import React from 'react'
 import { Badge } from './ui/badge'
 import { status } from '@/lib/constants'
 import { cn } from '@/lib/utils'
+import { Tooltip, TooltipContent, TooltipTrigger } from './ui/tooltip'
 
 type Props = {
     status: StatusValue
+    reason?: string
 }
 
 const statusColors: Record<StatusValue, string> = {
@@ -14,11 +16,20 @@ const statusColors: Record<StatusValue, string> = {
     rejected: 'bg-red-500/80',
 }
 
-function StatusBadge({ status: statusKey }: Props) {
+function StatusBadge({ status: statusKey, reason }: Props) {
     return (
-        <Badge className={cn('px-4 py-1.5 cursor-context-menu', statusColors[statusKey])}>
-            {status[statusKey].label}
-        </Badge>
+        <Tooltip delayDuration={300}>
+            <TooltipTrigger asChild>
+                <Badge className={cn('px-4 w-24 overflow-hidden py-1.5 cursor-context-menu relative', statusColors[statusKey])}>
+                    {status[statusKey].label}
+                </Badge>
+            </TooltipTrigger>
+            {reason && (
+                <TooltipContent>
+                    {reason}
+                </TooltipContent>
+            )}
+        </Tooltip>
     )
 }
 

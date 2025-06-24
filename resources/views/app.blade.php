@@ -35,6 +35,7 @@
         @inertiaHead
     </head>
     <body class="font-mono antialiased bg-background">
+          <div id="dialog-root"></div>
         @inertia
     </body>
 </html>
