@@ -5,17 +5,18 @@ import {
     DialogHeader,
     DialogTitle
 } from '../ui/dialog'
-import { useForm, usePage } from '@inertiajs/react'
+import { useForm } from '@inertiajs/react'
 import { Button } from '../ui/button'
 import { PlusIcon, TrashIcon } from 'lucide-react'
-import { ProtocolType, UserPortRequest } from '@/types'
-import { useState } from 'react'
+import { ProtocolType, UserPortRequest, UserRequest } from '@/types'
+import { useEffect, useMemo, useState } from 'react'
 import FormInput from '../form-input'
 import FormSelect from '../form-select'
 
-interface CreateRequestDialogProps {
+interface RequestDialogProps {
     open: boolean
-    openChange: (open: boolean) => void
+    openChange: (open: boolean) => void;
+    request?: UserRequest;
 }
 
 interface PortFormProps {
@@ -78,21 +79,26 @@ const initialPort: UserPortRequest = {
     protocol: 'tcp'
 }
 
-function CreateRequestDialog({ open, openChange }: CreateRequestDialogProps) {
-    const { errors } = usePage().props
+function RequestDialog({ open, openChange, request }: RequestDialogProps) {
     const [ports, setPorts] = useState<UserPortRequest[]>([initialPort])
-
-    const { data, setData, post, reset } = useForm({
-        ip_address: '',
-        fqdn: '',
-        ports: ports.map(p => ({
+    const isEdit = useMemo(() => {
+        return request !== undefined
+    }, [request])
+    const { data, setData, post, put, reset, errors } = useForm({
+        ip_address: request?.ipAddress ?? '',
+        fqdn: request?.fqdn ?? '',
+        ports: request?.ports ? request.ports.map(p => ({
+            name: p.name ?? '',
+            port: p.port ?? '',
+            protocol: p.protocol ?? ''
+        })) : ports.map(p => ({
             name: p.name ?? '',
             port: p.port ?? '',
             protocol: p.protocol ?? ''
         })),
-        exposed: false,
-        description: '',
-        vlan: '',
+        exposed: request?.exposed ?? false,
+        description: request?.description ?? '',
+        vlan: request?.vlan ?? '',
     })
 
     // Sync local ports state with inertia data
@@ -117,22 +123,62 @@ function CreateRequestDialog({ open, openChange }: CreateRequestDialogProps) {
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault()
-        post(route('request.store'), {
-            onSuccess() {
-                openChange(false)
-                reset()
-                setPorts([initialPort])
-            }
-        }) // adapte la route à ton backend
+        if (!isEdit) {
+            post(route('request.store'), {
+                onSuccess() {
+                    openChange(false)
+                    reset()
+                    setPorts([initialPort])
+                }
+            }) // adapte la route à ton backend
+        } else {
+            put(route('request.update', { id: request?.id }), {
+                onSuccess() {
+                    openChange(false)
+                    reset()
+                    setPorts([initialPort])
+                }
+            }) // adapte la route à ton backend
+
+        }
     }
+
+    useEffect(() => {
+        const filledPorts = request?.ports?.length
+            ? request.ports.map(p => ({
+                name: p.name ?? '',
+                port: p.port ?? '',
+                protocol: p.protocol ?? 'tcp',
+            }))
+            : [initialPort]
+
+        setData({
+            ip_address: request?.ipAddress ?? '',
+            fqdn: request?.fqdn ?? '',
+            ports: filledPorts,
+            exposed: request?.exposed ?? false,
+            description: request?.description ?? '',
+            vlan: request?.vlan ?? '',
+        })
+
+        setPorts(filledPorts)
+    }, [request, setData])
 
     return (
         <Dialog open={open} onOpenChange={openChange}>
             <DialogContent className='w-full sm:max-w-xl md:!max-w-2xl lg:!max-w-4xl max-h-screen'>
                 <DialogHeader className='border-b pb-2'>
-                    <DialogTitle>Nouvelle demande</DialogTitle>
+                    <DialogTitle>{isEdit ? "Editez votre demande" : "Nouvelle demande"}</DialogTitle>
                     <DialogDescription>
-                        Remplis les informations ci-dessous pour créer une nouvelle demande.
+                        {isEdit ? (
+                            <span>
+                                Changez les informations ci-dessous pour éditer votre demande.
+                            </span>
+                        ) : (
+                            <span>
+                                Remplis les informations ci-dessous pour créer une nouvelle demande.
+                            </span>
+                        )}
                     </DialogDescription>
                 </DialogHeader>
 
@@ -229,7 +275,7 @@ function CreateRequestDialog({ open, openChange }: CreateRequestDialogProps) {
                     ))}
 
                     <Button type='submit' className='w-full'>
-                        Créer la demande
+                        {isEdit ? "Valider les changements" : "Créer la demande"}
                     </Button>
                 </form>
             </DialogContent>
@@ -237,4 +283,4 @@ function CreateRequestDialog({ open, openChange }: CreateRequestDialogProps) {
     )
 }
 
-export default CreateRequestDialog
+export default RequestDialog

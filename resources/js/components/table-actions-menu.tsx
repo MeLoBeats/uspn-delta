@@ -3,17 +3,25 @@ import { Button } from './ui/button'
 import { MoreHorizontal, PencilIcon, TrashIcon } from 'lucide-react'
 import { useConfirmDialog } from '@/context/confirm-context'
 import { useState } from 'react'
+import { router } from '@inertiajs/react'
+import { useRequestDialog } from '@/context/request-context'
+import { UserRequest } from '@/types'
 
 interface ITableActionsMenu {
-    id: number
+    request: UserRequest
 }
 
-function TableActionsMenu({ id }: ITableActionsMenu) {
+function TableActionsMenu({ request }: ITableActionsMenu) {
     const { confirm } = useConfirmDialog()
+    const { edit } = useRequestDialog()
     const [open, setOpen] = useState(false)
 
     const handleEdit = () => {
         setOpen(false) // Fermer le dropdown
+        setTimeout(() => {
+            edit(request)
+        }, 100)
+
     }
 
     const handleDelete = () => {
@@ -23,7 +31,7 @@ function TableActionsMenu({ id }: ITableActionsMenu) {
         setTimeout(() => {
             confirm({
                 onValid() {
-                    console.log("validation : " + id)
+                    router.delete(route('request.destroy', { id: request.id }))
                 }
             })
         }, 100)

@@ -31,6 +31,6 @@ export const userRequestscolumns: ColumnDef<UserRequest>[] = [
         size: 40, // largeur max (~taille icône + padding)
         enablePinning: true,
         header: "Actions",
-        cell: ({ row }) => <TableActionsMenu id={row.original.id} />
+        cell: ({ row }) => <TableActionsMenu request={row.original} />
     }
 ]

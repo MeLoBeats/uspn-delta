@@ -86,8 +86,14 @@ export interface SharedData {
     name: string;
     auth: { user: string };
     flash: {
-        error: string;
-        success: string;
+        error: {
+            message: string;
+            id: string;
+        };
+        success: {
+            message: string;
+            id: string;
+        };
     }
     ziggy: Config & { location: string };
     [key: string]: unknown;

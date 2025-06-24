@@ -1,15 +1,14 @@
-import CreateRequestDialog from '@/components/dialogs/create-request-dialog'
 import { userRequestscolumns } from '@/components/tables/user-request-columns'
 import { Button } from '@/components/ui/button'
 import { DataTable } from '@/components/ui/data-table'
 import { Input } from '@/components/ui/input'
+import { useRequestDialog } from '@/context/request-context'
 import { useServerFilters } from '@/hooks/use-server-filters'
 import AppLayout from '@/layouts/app-layout'
 import { showFullName } from '@/lib/utils'
 import { ResourceData, SharedData, UserRequest } from '@/types'
 import { usePage } from '@inertiajs/react'
 import { PlusIcon } from 'lucide-react'
-import { useState } from 'react'
 
 type RequestHomePageProps = {
     requests: ResourceData<UserRequest>
@@ -19,7 +18,7 @@ function RequestHomePage({ requests }: RequestHomePageProps) {
     const { auth: { user } } = usePage().props as unknown as SharedData
 
     const { filters, updateFilters } = useServerFilters({ search: "", page: requests.meta.current_page })
-    const [dialogOpen, setDialogOpen] = useState<boolean>(false)
+    const { create } = useRequestDialog()
 
     const handleSearchChange = (value: string) => {
         updateFilters({
@@ -35,11 +34,10 @@ function RequestHomePage({ requests }: RequestHomePageProps) {
                 {/* Filters */}
                 <div className='w-full flex items-center sm:justify-between gap-5 flex-col sm:flex-row py-5'>
                     <Input value={filters.search} onClear={() => handleSearchChange("")} onChange={(e) => handleSearchChange(e.target.value)} placeholder='Recherche' containerClassName='w-full sm:w-1/2' />
-                    <Button onClick={() => setDialogOpen(true)} className='w-full sm:w-fit cursor-pointer'>Nouvelle demande <span><PlusIcon /></span></Button>
+                    <Button onClick={create} className='w-full sm:w-fit cursor-pointer'>Nouvelle demande <span><PlusIcon /></span></Button>
                 </div>
                 <DataTable columns={userRequestscolumns} meta={requests.meta} data={requests.data} />
             </div>
-            <CreateRequestDialog open={dialogOpen} openChange={open => setDialogOpen(open)} />
         </AppLayout>
     )
 }

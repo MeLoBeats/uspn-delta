@@ -29,6 +29,7 @@ class PortRequestResource extends JsonResource
             'vlan'        => $this->vlan,
             'ports'       => json_decode($this->ports),
             'user' => $this->user->full_name,
+            'user_id' => $this->user_id,
             'description' => $this->description,
             'createdAt' => $this->created_at->format('d-m-Y'),
             'updatedAt' => $this->updated_at->format('d-m-Y'),

@@ -107,7 +107,7 @@ export function DataTable<TData, TValue>({
                     )}
                 </TableBody>
             </Table>
-            {(meta && meta.total == meta.current_page) && (
+            {meta && (
                 <TablePagination meta={meta} />
             )}
         </div>

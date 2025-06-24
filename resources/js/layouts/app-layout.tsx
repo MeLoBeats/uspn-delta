@@ -9,21 +9,22 @@ function AppLayout({ children }: PropsWithChildren) {
     const { flash: { error, success } } = usePage().props as unknown as SharedData
 
     useEffect(() => {
-        if (error) {
-            toast.error(error, {
+        if (error?.message) {
+            toast.error(error.message, {
                 richColors: true,
-                duration: 3000,
+                duration: 5000,
                 position: 'top-right'
             })
         }
-        if (success) {
-            toast.success(success, {
+
+        if (success?.message) {
+            toast.success(success.message, {
                 richColors: true,
-                duration: 3000,
+                duration: 5000,
                 position: 'top-right'
             })
         }
-    }, [success, error])
+    }, [success.id, error.id, error.message, success.message]) // Utiliser les IDs comme dépendances
 
     return (
         <>

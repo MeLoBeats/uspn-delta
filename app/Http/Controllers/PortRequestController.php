@@ -2,7 +2,7 @@
 
 namespace App\Http\Controllers;
 
-use App\Http\Requests\PortRequest as RequestsPortRequest;
+use App\Http\Requests\StorePortRequest as StorePortRequest;
 use App\Http\Resources\PortRequestResource;
 use App\Models\PortRequest;
 use Illuminate\Http\Request;
@@ -57,7 +57,7 @@ class PortRequestController extends Controller
         return inertia('requests/create');
     }
 
-    public function store(RequestsPortRequest $request)
+    public function store(StorePortRequest $request)
     {
         $user = Auth::user();
         if (!$user) {
@@ -76,18 +76,26 @@ class PortRequestController extends Controller
         // Logic to store a new port request
     }
 
-    public function edit($id)
+    public function update(StorePortRequest $request, $id)
     {
-        // Logic to show the form for editing a port request
-    }
-
-    public function update(Request $request, $id)
-    {
-        // Logic to update a port request
+        $portRequest = PortRequest::find($id);
+        $portRequest->update([
+            ...$request->validated(),
+            "ports" => json_encode($request->ports),
+        ]);
+        return redirect(route('request.index'))->with('success', "Votre demande à bien été mise à jour");
     }
 
     public function destroy($id)
     {
-        // Logic to delete a port request
+        $portRequest = PortRequest::find($id);
+        if (!$portRequest) {
+            return redirect(route('request.index'))->with('error', "Cette demande n'existe pas");
+        }
+        if ($portRequest->user_id !== Auth::user()->id) {
+            return redirect(route('request.index'))->with('error', "Vous n'avez pas la permission de supprimer cette demande");
+        }
+        $portRequest->delete();
+        return redirect(route('request.index'))->with('success', "La demande à bien été supprimée !");
     }
 }

@@ -50,11 +50,15 @@ class HandleInertiaRequests extends Middleware
                 'location' => $request->url(),
             ],
             'flash' => fn() => [
-                'success' => fn() => session()->get('success'),
-                'error'   => fn() => session()->get('error'),
-                'errors'  => fn() => session()->get('errors'),
+                'success' => [
+                    "message" => session()->get('success'),
+                    "id" => session()->get('success') ? uniqid() : null,
+                ],
+                'error' => [
+                    "message" => session()->get('error'),
+                    "id" => session()->get('error') ? uniqid() : null,
+                ]
             ],
-
         ];
     }
 }
