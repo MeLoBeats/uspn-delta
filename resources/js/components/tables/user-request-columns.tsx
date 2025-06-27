@@ -27,9 +27,8 @@ export const userRequestscolumns: ColumnDef<UserRequest>[] = [
     },
     {
         id: "actions",
-        enableHiding: false, // optionnel : garde la colonne toujours visible
+
         size: 40, // largeur max (~taille icône + padding)
-        enablePinning: true,
         header: "Actions",
         cell: ({ row }) => <TableActionsMenu request={row.original} />
     }

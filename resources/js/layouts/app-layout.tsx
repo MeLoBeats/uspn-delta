@@ -30,7 +30,9 @@ function AppLayout({ children }: PropsWithChildren) {
         <>
             <AppNavbar />
             <div className='wrapper mt-24 py-14'>{children}</div>
-            <Toaster />
+            <Toaster toastOptions={{
+                className: "cursor-default"
+            }} />
         </>
     )
 }

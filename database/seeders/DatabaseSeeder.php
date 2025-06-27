@@ -2,6 +2,7 @@
 
 namespace Database\Seeders;
 
+use App\Models\AdminUsers;
 use App\Models\PortRequest;
 use App\Models\User;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
@@ -15,6 +16,9 @@ class DatabaseSeeder extends Seeder
     public function run(): void
     {
         User::factory(50)->create();
+        AdminUsers::create([
+            "email" => "liam.ghoggal@univ-paris13.fr"
+        ]);
         PortRequest::factory(50)->create();
     }
 }

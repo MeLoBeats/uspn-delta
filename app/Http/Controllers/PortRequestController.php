@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Enums\StatusEnum;
 use App\Http\Requests\StorePortRequest as StorePortRequest;
 use App\Http\Resources\PortRequestResource;
 use App\Models\PortRequest;
@@ -79,6 +80,9 @@ class PortRequestController extends Controller
     public function update(StorePortRequest $request, $id)
     {
         $portRequest = PortRequest::find($id);
+        if ($portRequest->status !== StatusEnum::PENDING->value) {
+            return redirect(route('request.index'))->with('error', "Vous ne pouvez pas éditer une demande déjà traitée");
+        }
         $portRequest->update([
             ...$request->validated(),
             "ports" => json_encode($request->ports),
@@ -94,6 +98,9 @@ class PortRequestController extends Controller
         }
         if ($portRequest->user_id !== Auth::user()->id) {
             return redirect(route('request.index'))->with('error', "Vous n'avez pas la permission de supprimer cette demande");
+        }
+        if ($portRequest->status !== StatusEnum::PENDING->value) {
+            return redirect(route('request.index'))->with('error', "Vous ne pouvez pas supprimer une demande déjà traitée");
         }
         $portRequest->delete();
         return redirect(route('request.index'))->with('success', "La demande à bien été supprimée !");

@@ -21,17 +21,17 @@ class User extends Authenticatable
     protected $fillable = [
         'full_name',
         'email',
-        'admin',
     ];
+
+    protected $appends = ['is_admin'];
 
     public function port_requests(): HasMany
     {
         return $this->hasMany(PortRequest::class);
     }
 
-    public function is_admin(): bool
+    public function getIsAdminAttribute(): bool
     {
-        $isAdmin = AdminUsers::where('email', '=', $this->email)->first();
-        return $isAdmin->count() === 1;
+        return AdminUsers::where('email', $this->email)->exists();
     }
 }

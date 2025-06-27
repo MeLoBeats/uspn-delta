@@ -41,7 +41,7 @@ export interface UserRequest {
     id: number;
     ipAddress: string;
     fqdn: string;
-    status: string;
+    status: "pending" | "rejected" | "approved";
     reason?: string;
     exposed: boolean;
     exposedLabel: string;
@@ -76,6 +76,7 @@ export interface NavbarLink {
     href: string;
     direct?: boolean;
     active: boolean;
+    isHidden?: boolean;
 }
 
 export interface Auth {
@@ -84,7 +85,10 @@ export interface Auth {
 
 export interface SharedData {
     name: string;
-    auth: { user: string };
+    auth: {
+        user: string,
+        isAdmin: boolean
+    };
     flash: {
         error: {
             message: string;

@@ -2,7 +2,7 @@ import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigge
 import { Button } from './ui/button'
 import { MoreHorizontal, PencilIcon, TrashIcon } from 'lucide-react'
 import { useConfirmDialog } from '@/context/confirm-context'
-import { useState } from 'react'
+import { useMemo, useState } from 'react'
 import { router } from '@inertiajs/react'
 import { useRequestDialog } from '@/context/request-context'
 import { UserRequest } from '@/types'
@@ -15,6 +15,9 @@ function TableActionsMenu({ request }: ITableActionsMenu) {
     const { confirm } = useConfirmDialog()
     const { edit } = useRequestDialog()
     const [open, setOpen] = useState(false)
+    const isPending = useMemo(() => {
+        return request.status === "pending"
+    }, [request])
 
     const handleEdit = () => {
         setOpen(false) // Fermer le dropdown
@@ -45,11 +48,11 @@ function TableActionsMenu({ request }: ITableActionsMenu) {
                 </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" sideOffset={4}>
-                <DropdownMenuItem onClick={handleEdit}>
+                <DropdownMenuItem onClick={handleEdit} disabled={!isPending}>
                     <PencilIcon className="h-4 w-4 mr-2" />
                     Éditer
                 </DropdownMenuItem>
-                <DropdownMenuItem className="text-red-500" onClick={handleDelete}>
+                <DropdownMenuItem disabled={!isPending} className="text-red-500" onClick={handleDelete}>
                     <TrashIcon color="red" className="h-4 w-4 mr-2" />
                     Supprimer
                 </DropdownMenuItem>
