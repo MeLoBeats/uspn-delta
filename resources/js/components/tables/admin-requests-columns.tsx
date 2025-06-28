@@ -3,10 +3,14 @@ import { ColumnDef } from "@tanstack/react-table"
 import StatusBadge from "../status-badge"
 import TableActionsMenu from "../table-actions-menu"
 
-export const userRequestscolumns: ColumnDef<UserRequest>[] = [
+export const adminRequestscolumns: ColumnDef<UserRequest>[] = [
     {
         accessorKey: "createdAt",
         header: "Date",
+    },
+    {
+        accessorKey: "user",
+        header: "Demandeur",
     },
     {
         accessorKey: "fqdn",

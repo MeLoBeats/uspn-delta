@@ -46,11 +46,14 @@ export function useServerFilters<T extends Record<string, string | number>>(
     useEffect(() => {
         const cleaned = cleanFilters(debouncedFilters)
 
-        router.get(route(route().current()!), cleaned, {
-            preserveScroll,
-            preserveState,
-            replace,
-        })
+        const currentRoute = route().current()
+        if (currentRoute) {
+            router.get(route(currentRoute), cleaned, {
+                preserveScroll,
+                preserveState,
+                replace,
+            })
+        }
     }, [debouncedFilters])
 
     const updateFilters = (newValues: Partial<T>) => {

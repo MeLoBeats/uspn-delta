@@ -73,9 +73,9 @@ export type ProtocolType = "tcp" | "udp" | "all"
 
 export interface NavbarLink {
     name: string;
+    label: string;
     href: string;
     direct?: boolean;
-    active: boolean;
     isHidden?: boolean;
 }
 

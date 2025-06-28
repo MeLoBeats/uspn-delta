@@ -28,9 +28,9 @@ function RequestHomePage({ requests }: RequestHomePageProps) {
     }
 
     return (
-        <AppLayout>
+        <AppLayout active='requests.index'>
             <div className="flex flex-col justify-center">
-                <h1 className="text-2xl font-sans font-bold mb-4">Tableau de mes demandes : {showFullName(user) ?? ""}</h1>
+                <h1 className="title">Tableau de mes demandes : {showFullName(user) ?? ""}</h1>
                 {/* Filters */}
                 <div className='w-full flex items-center sm:justify-between gap-5 flex-col sm:flex-row py-5'>
                     <Input value={filters.search} onClear={() => handleSearchChange("")} onChange={(e) => handleSearchChange(e.target.value)} placeholder='Recherche' containerClassName='w-full sm:w-1/2' />

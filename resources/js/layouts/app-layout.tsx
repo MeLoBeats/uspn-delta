@@ -5,7 +5,7 @@ import { usePage } from '@inertiajs/react'
 import React, { PropsWithChildren, useEffect } from 'react'
 import { toast } from 'sonner'
 
-function AppLayout({ children }: PropsWithChildren) {
+function AppLayout({ children, active }: PropsWithChildren<{ active: string }>) {
     const { flash: { error, success } } = usePage().props as unknown as SharedData
 
     useEffect(() => {
@@ -28,7 +28,7 @@ function AppLayout({ children }: PropsWithChildren) {
 
     return (
         <>
-            <AppNavbar />
+            <AppNavbar active={active} />
             <div className='wrapper mt-24 py-14'>{children}</div>
             <Toaster toastOptions={{
                 className: "cursor-default"

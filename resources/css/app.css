@@ -170,3 +170,9 @@
         @apply xl:px-20 md:px-14 px-5
     }
 }
+
+@layer components {
+    .title {
+        @apply text-2xl font-sans font-bold mb-4 text-primary
+    }
+}
