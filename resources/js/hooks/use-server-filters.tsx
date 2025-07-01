@@ -8,7 +8,7 @@ type FilterOptions = {
     replace?: boolean
 }
 
-function cleanFilters<T extends Record<string, string | number>>(filters: T): Partial<T> {
+function cleanFilters<T extends Record<string, string | number | undefined>>(filters: T): Partial<T> {
     const cleaned: Partial<T> = {}
     for (const key in filters) {
         const value = filters[key]
@@ -19,7 +19,7 @@ function cleanFilters<T extends Record<string, string | number>>(filters: T): Pa
     return cleaned
 }
 
-export function useServerFilters<T extends Record<string, string | number>>(
+export function useServerFilters<T extends Record<string, string | number | undefined>>(
     initialFilters: T,
     options: FilterOptions = {}
 ) {
@@ -54,7 +54,7 @@ export function useServerFilters<T extends Record<string, string | number>>(
                 replace,
             })
         }
-    }, [debouncedFilters])
+    }, [debouncedFilters, preserveScroll, preserveState, replace])
 
     const updateFilters = (newValues: Partial<T>) => {
         setFilters(prev => ({

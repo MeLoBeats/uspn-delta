@@ -22,7 +22,7 @@ Route::resource('demandes', PortRequestController::class)
         'destroy' => 'request.destroy',
     ]);
 
-Route::get('/admin/demandes', [AdminController::class, "index"])->middleware(EnsureIsAdmin::class);
+Route::get('/admin/demandes', [AdminController::class, "index"])->name('admin.requests.index')->middleware(EnsureIsAdmin::class);
 
 Route::get('/deconnexion', [AuthController::class, "logout"])
     ->name('auth.logout');

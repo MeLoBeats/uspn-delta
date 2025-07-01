@@ -2,6 +2,7 @@
 
 namespace Database\Factories;
 
+use App\Enums\StatusEnum;
 use Illuminate\Database\Eloquent\Factories\Factory;
 
 /**
@@ -29,6 +30,7 @@ class PortRequestFactory extends Factory
             'exposed' => $this->faker->boolean,
             'vlan' => $this->faker->optional()->word,
             'description' => $this->faker->optional()->sentence,
+            'status' => $this->faker->randomElement(StatusEnum::cases()),
             'user_id' => $this->faker->numberBetween(1, 49)
         ];
     }

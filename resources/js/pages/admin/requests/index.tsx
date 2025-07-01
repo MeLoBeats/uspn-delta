@@ -5,7 +5,7 @@ import { Label } from '@/components/ui/label'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { useServerFilters } from '@/hooks/use-server-filters'
 import AppLayout from '@/layouts/app-layout'
-import { status } from '@/lib/constants'
+import { expositions, status } from '@/lib/constants'
 import { ResourceData, UserRequest } from '@/types'
 
 interface IAdminRequestsHome {
@@ -14,7 +14,7 @@ interface IAdminRequestsHome {
 
 function AdminRequestsHome({ requests }: IAdminRequestsHome) {
 
-    const { filters, updateFilters } = useServerFilters({ search: "", page: requests.meta.current_page, status: "" })
+    const { filters, updateFilters } = useServerFilters<Record<string, undefined | string | number>>({ search: "", page: requests.meta.current_page, status: undefined, exposed: undefined })
 
     const handleSearchChange = (value: string) => {
         updateFilters({
@@ -24,9 +24,15 @@ function AdminRequestsHome({ requests }: IAdminRequestsHome) {
     }
 
     const handleStatusChange = (value: string) => {
-        console.log(value);
         updateFilters({
             status: value,
+            page: 1, // ← Reset pagination si recherche change
+        })
+    }
+
+    const handleExposedChange = (value: string) => {
+        updateFilters({
+            exposed: value,
             page: 1, // ← Reset pagination si recherche change
         })
     }
@@ -37,15 +43,15 @@ function AdminRequestsHome({ requests }: IAdminRequestsHome) {
                 {/* Filters */}
                 <div className='w-full flex items-center sm:justify-between gap-5 flex-col sm:flex-row py-5'>
                     <Input value={filters.search} onClear={() => handleSearchChange("")} onChange={(e) => handleSearchChange(e.target.value)} placeholder='Recherche' containerClassName='w-full sm:w-1/2' />
-                    <div>
+                    <div className='flex items-center gap-5 flex-row-reverse'>
                         <div className='flex flex-col gap-2'>
                             <Label htmlFor='status' className='font-semibold text-xs'>Statut</Label>
                             <Select onValueChange={handleStatusChange}>
                                 <SelectTrigger id='status'>
-                                    <SelectValue placeholder="Statut" />
+                                    <SelectValue placeholder="Toutes" />
                                 </SelectTrigger>
                                 <SelectContent>
-                                    <SelectItem value={" "}>
+                                    <SelectItem value={null!}>
                                         Toutes
                                     </SelectItem>
                                     {Object.keys(status).map((s) => {
@@ -53,6 +59,27 @@ function AdminRequestsHome({ requests }: IAdminRequestsHome) {
                                         return (
                                             <SelectItem key={key} value={status[key].value}>
                                                 {status[key].label}
+                                            </SelectItem>
+                                        );
+                                    })}
+                                </SelectContent>
+                            </Select>
+                        </div>
+                        <div className='flex flex-col gap-2'>
+
+                            <Label htmlFor='exposed' className='font-semibold text-xs'>Exposition</Label>
+                            <Select onValueChange={handleExposedChange}>
+                                <SelectTrigger id='exposed'>
+                                    <SelectValue placeholder="Toutes" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    <SelectItem value={null!}>
+                                        Toutes
+                                    </SelectItem>
+                                    {expositions.map((e, id) => {
+                                        return (
+                                            <SelectItem key={id} value={e.value.toString()}>
+                                                {e.label}
                                             </SelectItem>
                                         );
                                     })}

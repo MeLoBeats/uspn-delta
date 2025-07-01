@@ -2,6 +2,7 @@ import { StatusValue, UserRequest } from "@/types"
 import { ColumnDef } from "@tanstack/react-table"
 import StatusBadge from "../status-badge"
 import TableActionsMenu from "../table-actions-menu"
+import PortBadge from "../port-badge"
 
 export const adminRequestscolumns: ColumnDef<UserRequest>[] = [
     {
@@ -19,6 +20,15 @@ export const adminRequestscolumns: ColumnDef<UserRequest>[] = [
     {
         accessorKey: "ipAddress",
         header: "IP",
+    },
+    {
+        accessorKey: "ports",
+        header: "Ports",
+        cell: (p) => p.row.original.ports.map(port =>
+            <div className="flex items-center justify-center flex-wrap gap-5 w-full">
+                <PortBadge port={port} />
+            </div>
+        )
     },
     {
         accessorKey: "exposedLabel",
