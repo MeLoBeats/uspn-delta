@@ -12,7 +12,7 @@ type Props = {
 
 const statusColors: Record<StatusValue, string> = {
     approved: 'bg-green-500/80',
-    pending: 'bg-zinc-500/80',
+    pending: 'bg-secondary/80',
     rejected: 'bg-red-500/80',
 }
 

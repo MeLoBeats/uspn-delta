@@ -1,8 +1,9 @@
 import { StatusValue, UserRequest } from "@/types"
 import { ColumnDef } from "@tanstack/react-table"
 import StatusBadge from "../status-badge"
-import TableActionsMenu from "../table-actions-menu"
 import PortBadge from "../port-badge"
+import AdminTableActionsMenu from "../admin-table-actions-menu"
+import ExpositionBadge from "../exposition-badge"
 
 export const adminRequestscolumns: ColumnDef<UserRequest>[] = [
     {
@@ -22,6 +23,23 @@ export const adminRequestscolumns: ColumnDef<UserRequest>[] = [
         header: "IP",
     },
     {
+        accessorKey: "description",
+        header: "Description",
+        cell: (props) => {
+            const fullText = props.getValue() as string
+            const truncated = fullText?.length > 50 ? fullText.slice(0, 50) + "…" : fullText
+
+            return (
+                <p
+                    className="truncate max-w-[250px] text-sm text-muted-foreground"
+                    title={fullText} // Affiche le texte complet au survol
+                >
+                    {truncated}
+                </p>
+            )
+        },
+    },
+    {
         accessorKey: "ports",
         header: "Ports",
         cell: (p) => p.row.original.ports.map(port =>
@@ -33,6 +51,9 @@ export const adminRequestscolumns: ColumnDef<UserRequest>[] = [
     {
         accessorKey: "exposedLabel",
         header: "Exposition",
+        cell: (p) => <div className="flex items-center justify-center flex-wrap gap-5 w-full">
+            <ExpositionBadge exposition={p.row.original.exposed} />
+        </div>
     },
     {
         accessorKey: "status",
@@ -44,6 +65,6 @@ export const adminRequestscolumns: ColumnDef<UserRequest>[] = [
 
         size: 40, // largeur max (~taille icône + padding)
         header: "Actions",
-        cell: ({ row }) => <TableActionsMenu request={row.original} />
+        cell: ({ row }) => <AdminTableActionsMenu request={row.original} />
     }
 ]

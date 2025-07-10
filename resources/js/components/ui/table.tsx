@@ -2,14 +2,14 @@ import * as React from "react"
 
 import { cn } from "@/lib/utils"
 
-function Table({ className, wrapperClassName = "max-h-[500px]", ...props }: React.ComponentProps<"table"> & {
+function Table({ className, wrapperClassName = "max-h-[700px]", ...props }: React.ComponentProps<"table"> & {
   wrapperClassName?: string
 }) {
 
   return (
     <div
       data-slot="table-container"
-      className={cn(`relative w-full overflow-auto`, wrapperClassName)}
+      className={cn(`relative w-full rounded-md overflow-auto no-scrollbar`, wrapperClassName)}
     >
       <table
         data-slot="table"

@@ -13,7 +13,7 @@ function AppLayout({ children, active }: PropsWithChildren<{ active: string }>) 
             toast.error(error.message, {
                 richColors: true,
                 duration: 5000,
-                position: 'top-right'
+                position: 'top-center'
             })
         }
 
@@ -21,7 +21,7 @@ function AppLayout({ children, active }: PropsWithChildren<{ active: string }>) 
             toast.success(success.message, {
                 richColors: true,
                 duration: 5000,
-                position: 'top-right'
+                position: 'top-center'
             })
         }
     }, [success.id, error.id, error.message, success.message]) // Utiliser les IDs comme dépendances

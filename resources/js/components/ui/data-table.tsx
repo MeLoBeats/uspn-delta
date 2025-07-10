@@ -63,53 +63,60 @@ export function DataTable<TData, TValue>({
     })
 
     return (
-        <div className="rounded-md border">
-            <Table className="relative w-full">
-                <TableHeader className="sticky top-0 bg-background z-10">
-                    {table.getHeaderGroups().map((headerGroup) => (
-                        <TableRow key={headerGroup.id}>
-                            {headerGroup.headers.map((header) => {
-                                return (
-                                    <TableHead className="text-primary font-semibold text-center py-4 text-[16px]" key={header.id}>
-                                        {header.isPlaceholder
-                                            ? null
-                                            : flexRender(
-                                                header.column.columnDef.header,
-                                                header.getContext()
-                                            )}
-                                    </TableHead>
-                                )
-                            })}
-                        </TableRow>
-                    ))}
-                </TableHeader>
-                <TableBody className="h-60">
-                    {table.getRowModel().rows?.length ? (
-                        table.getRowModel().rows.map((row) => (
-                            <TableRow
-                                key={row.id}
-                                data-state={row.getIsSelected() && "selected"}
-                                className="hover:bg-gray-100 transition-colors"
-                            >
-                                {row.getVisibleCells().map((cell) => (
-                                    <TableCell className="text-center py-6" key={cell.id}>
-                                        {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                                    </TableCell>
-                                ))}
+        <>
+            <div className="rounded-md border shadow-md bg-white">
+                <Table className="relative w-full">
+                    <TableHeader className="sticky top-0 bg-primary z-10">
+                        {table.getHeaderGroups().map((headerGroup) => (
+                            <TableRow className="hover:bg-primary" key={headerGroup.id}>
+                                {headerGroup.headers.map((header) => {
+                                    return (
+                                        <TableHead className="text-white font-semibold text-center py-4 text-[16px]" key={header.id}>
+                                            {header.isPlaceholder
+                                                ? null
+                                                : flexRender(
+                                                    header.column.columnDef.header,
+                                                    header.getContext()
+                                                )}
+                                        </TableHead>
+                                    )
+                                })}
                             </TableRow>
-                        ))
-                    ) : (
-                        <TableRow>
-                            <TableCell colSpan={columns.length} className="h-24 text-center">
-                                Aucun résultats.
-                            </TableCell>
-                        </TableRow>
-                    )}
-                </TableBody>
-            </Table>
+                        ))}
+                    </TableHeader>
+                    <TableBody className="h-60">
+                        {table.getRowModel().rows?.length ? (
+                            table.getRowModel().rows.map((row) => (
+                                <TableRow
+                                    key={row.id}
+                                    data-state={row.getIsSelected() && "selected"}
+                                    className="hover:bg-gray-100 transition-colors"
+                                >
+                                    {row.getVisibleCells().map((cell) => (
+                                        <TableCell className={cn("text-center py-6",
+                                            (cell.column.id === "ports" ||
+                                                cell.column.id === "exposedLabel" ||
+                                                cell.column.id === "actions" ||
+                                                cell.column.id === "status")
+                                            && "bg-primary/5")} key={cell.id}>
+                                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
+                                        </TableCell>
+                                    ))}
+                                </TableRow>
+                            ))
+                        ) : (
+                            <TableRow>
+                                <TableCell colSpan={columns.length} className="h-24 text-center">
+                                    Aucun résultats.
+                                </TableCell>
+                            </TableRow>
+                        )}
+                    </TableBody>
+                </Table>
+            </div>
             {meta && (
                 <TablePagination meta={meta} />
             )}
-        </div>
+        </>
     )
 }
