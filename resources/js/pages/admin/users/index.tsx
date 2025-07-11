@@ -1,3 +1,4 @@
+import AddAdminUserDialog from "@/components/dialogs/add-admin-users-dialog";
 import { adminUserscolumns } from "@/components/tables/admin-users-columns";
 import { DataTable } from "@/components/ui/data-table";
 import AppLayout from "@/layouts/app-layout"
@@ -8,12 +9,11 @@ interface IAdminUsersPage {
 }
 
 const AdminUsersPage = ({ users }: IAdminUsersPage) => {
-  console.log(users);
-  
   return (
     <AppLayout active="admin.users.index">
-        <div className="flex flex-col justify-center">
+        <div className="flex flex-row justify-between items-center mb-4">
             <h1 className="title">Gestion des administrateurs</h1>
+            <AddAdminUserDialog />
         </div>
         <DataTable columns={adminUserscolumns} data={users.data} />
     </AppLayout>
