@@ -24,6 +24,8 @@ Route::resource('demandes', PortRequestController::class)
     ]);
 
 Route::get('/admin/users', [AdminUsersController::class, "index"])->name('admin.users.index')->middleware(EnsureIsAdmin::class);
+Route::post('/admin/users', [AdminUsersController::class, "store"])->name('admin.users.store')->middleware(EnsureIsAdmin::class);
+Route::delete('/admin/users/{id}', [AdminUsersController::class, "destroy"])->name('admin.users.destroy')->middleware(EnsureIsAdmin::class);
 Route::get('/admin/demandes', [AdminController::class, "index"])->name('admin.requests.index')->middleware(EnsureIsAdmin::class);
 Route::put('/admin/demandes/{id}/approve', [AdminController::class, "validateRequest"])->name('admin.requests.validate')->middleware(EnsureIsAdmin::class);
 Route::put('/admin/demandes/{id}/reject', [AdminController::class, "rejectRequest"])->name('admin.requests.reject')->middleware(EnsureIsAdmin::class);
