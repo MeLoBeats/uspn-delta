@@ -8,7 +8,7 @@ export interface ResourceData<T> {
         last: string;
         prev: string | null;
         next: string | null;
-    },
+    };
     meta: MetaPagination;
 }
 
@@ -28,26 +28,25 @@ export interface MetaPagination {
 }
 
 export type StatusType = {
-    value: "pending" | "approved" | "rejected";
-    label: "En attente" | "Approuvée" | "Rejetée"
-}
+    value: 'pending' | 'approved' | 'rejected';
+    label: 'En attente' | 'Approuvée' | 'Rejetée';
+};
 
-export type StatusKey = keyof typeof status
-export type StatusValue = typeof status[StatusKey]['value']
-export type StatusLabel = typeof status[StatusKey]['label']
-
+export type StatusKey = keyof typeof status;
+export type StatusValue = (typeof status)[StatusKey]['value'];
+export type StatusLabel = (typeof status)[StatusKey]['label'];
 
 export interface UserRequest {
     id: number;
     ipAddress: string;
     fqdn: string;
-    status: "pending" | "rejected" | "approved";
+    status: 'pending' | 'rejected' | 'approved';
     reason?: string;
     exposed: boolean;
     exposedLabel: string;
     vlan?: string;
     ports: UserPortRequest[];
-    user: Pick<User, "full_name">;
+    user: Pick<User, 'full_name'>;
     description?: string;
     createdAt: string;
     updatedAt: string;
@@ -69,7 +68,7 @@ export interface UserPortRequest {
     protocol: ProtocolType;
 }
 
-export type ProtocolType = "tcp" | "udp" | "all"
+export type ProtocolType = 'tcp' | 'udp' | 'all';
 
 export interface NavbarLink {
     name: string;
@@ -79,6 +78,11 @@ export interface NavbarLink {
     isHidden?: boolean;
 }
 
+export interface AdminUser {
+    id: number;
+    email: string;
+}
+
 export interface Auth {
     user: User;
 }
@@ -86,8 +90,8 @@ export interface Auth {
 export interface SharedData {
     name: string;
     auth: {
-        user: string,
-        isAdmin: boolean
+        user: string;
+        isAdmin: boolean;
     };
     flash: {
         error: {
@@ -98,7 +102,7 @@ export interface SharedData {
             message: string;
             id: string;
         };
-    }
+    };
     ziggy: Config & { location: string };
     [key: string]: unknown;
 }
