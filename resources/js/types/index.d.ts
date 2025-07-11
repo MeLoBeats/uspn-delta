@@ -76,6 +76,8 @@ export interface NavbarLink {
     href: string;
     direct?: boolean;
     isHidden?: boolean;
+    isAdmin?: boolean; // Ajouté pour la navbar admin
+    isDropdown?: boolean; // Ajouté pour le menu déroulant admin
 }
 
 export interface AdminUser {
