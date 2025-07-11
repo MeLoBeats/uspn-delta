@@ -9,4 +9,9 @@ class AdminUsers extends Model
 {
     /** @use HasFactory<\Database\Factories\AdminUsersFactory> */
     use HasFactory;
+
+    protected $fillable = [
+        'email',
+        'created_at',
+    ];
 }
