@@ -29,7 +29,7 @@ class StorePortRequest extends FormRequest
             "ports.*.name" => "required|string|max:255",
             "ports.*.protocol" => "required|string|in:tcp,udp,all",
             "exposed" => "boolean",
-            "vlan" => "required_if:exposed,false|string|max:255",
+            "vlan" => "nullable|string|max:255",
             "description" => "nullable|string|max:1000",
         ];
     }
