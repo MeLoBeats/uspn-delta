@@ -11,8 +11,12 @@ class AuthController extends Controller
     public function logout()
     {
         Auth::logout();
+        Session::forget('cas_user');
+        Session::invalidate();
+        Session::regenerateToken();
+
         cas()->logout();
-        Session::remove("cas_user");
+
         return redirect('/');
     }
 }
