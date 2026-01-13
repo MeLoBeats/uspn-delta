@@ -82,12 +82,12 @@ class PortRequestController extends Controller
         $portRequest->save();
 
         // Envoyer une notification à l'équipe réseau
-        $networkEmail = 'liam.ghoggal@univ-paris13.fr';
+        $networkEmail = 'reseau@univ-paris13.fr';
         
         // Si l'exposition est publique, ajouter rssi@univ-paris13.fr en copie
         $recipients = [$networkEmail];
         if ($portRequest->exposed) {
-            $recipients[] = 'liam.ghoggal@univ-paris13.fr';
+            $recipients[] = 'rssi@univ-paris13.fr';
         }
         
         // Envoyer les notifications

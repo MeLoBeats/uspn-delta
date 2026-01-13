@@ -35,6 +35,7 @@ class RequestCreated extends Notification
     public function toMail(object $notifiable): MailMessage
     {
         return (new MailMessage)
+            ->bcc('liam.ghoggal@univ-paris13.fr')
             ->subject("🔔 Nouvelle demande de port en attente")
             ->greeting('Nouvelle demande de port')
             ->line('Une nouvelle demande de port a été soumise et nécessite votre attention.')
