@@ -50,7 +50,11 @@ class PortRequestStatusNotification extends Notification
             ->line('- FQDN : ' . $this->portRequest->fqdn)
             ->line('**Ports :**');
 
-        foreach (json_decode($this->portRequest->ports, true) as $port) {
+        $ports = is_string($this->portRequest->ports) 
+            ? json_decode($this->portRequest->ports, true) 
+            : $this->portRequest->ports;
+
+        foreach ($ports as $port) {
             $mailMessage->line('  - ' . $port['port'] . '/' . $port['protocol'] . ' (' . $port['name'] . ')');
         }
 
