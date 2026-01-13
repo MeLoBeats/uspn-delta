@@ -27,7 +27,7 @@ class PortRequestResource extends JsonResource
             'exposed'     => $this->exposed,
             'exposedLabel'     => $this->exposed ? "Publique" : "Privée",
             'vlan'        => $this->vlan,
-            'ports'       => json_decode($this->ports),
+            'ports'       => is_string($this->ports) ? json_decode($this->ports, true) : $this->ports,
             'user' => $this->user->full_name,
             'user_id' => $this->user_id,
             'description' => $this->description,

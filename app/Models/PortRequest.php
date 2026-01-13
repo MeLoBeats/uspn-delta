@@ -20,6 +20,7 @@ class PortRequest extends Model
         'exposed',
         'vlan',
         'description',
+        'user_id',
     ];
 
     protected $casts = [

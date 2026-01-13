@@ -15,10 +15,10 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        User::factory(50)->create();
+        // User::factory(50)->create();
         AdminUsers::create([
             "email" => "liam.ghoggal@univ-paris13.fr"
         ]);
-        PortRequest::factory(50)->create();
+        // PortRequest::factory(50)->create();
     }
 }
