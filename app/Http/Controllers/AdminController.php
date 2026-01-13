@@ -5,7 +5,11 @@ namespace App\Http\Controllers;
 use App\Enums\StatusEnum;
 use App\Http\Resources\PortRequestResource;
 use App\Models\PortRequest;
+use App\Models\User;
+use App\Notifications\PortRequestStatusNotification;
+use App\Notifications\NewPortRequestNotification;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Notification;
 
 class AdminController extends Controller
 {
@@ -47,31 +51,62 @@ class AdminController extends Controller
         ]);
     }
 
-    public function validateRequest(int $id)
+    public function validateRequest(Request $request, int $id)
     {
-        $portReq = PortRequest::find($id);
-        if (!$portReq) {
-            return redirect(route('admin.requests.index'))->with('error', "La demande n'existe pas");
+        $portRequest = PortRequest::with('user')->find($id);
+        if (!$portRequest) {
+            return back()->with('error', 'Demande de port non trouvée');
         }
 
-        $portReq->status = StatusEnum::APPROVED->value;
-        $portReq->save();
-        return redirect(route('admin.requests.index'))->with('success', "La demande à bien été validée");
+        // if ($portRequest->status !== StatusEnum::PENDING->value) {
+        //     return back()->with('error', 'Cette demande a déjà été traitée');
+        // }
+
+        $portRequest->update([
+            'status' => StatusEnum::APPROVED->value,
+            'reason' => null,
+        ]);
+
+        // Envoyer une notification à l'utilisateur
+        $portRequest->user->notify(
+            new PortRequestStatusNotification(
+                $portRequest,
+                'approved'
+            )
+        );
+
+        return back()->with('success', 'La demande a été approuvée avec succès');
     }
 
-    public function rejectRequest(Request $req, int $id)
+    public function rejectRequest(Request $request, int $id)
     {
-        $reason = $req->input("reason");
-        $portReq = PortRequest::find($id);
-        if (!$portReq) {
-            return redirect(route('admin.requests.index'))->with('error', "La demande n'existe pas");
+        $request->validate([
+            'reason' => 'nullable|string|min:10',
+        ]);
+
+        $portRequest = PortRequest::with('user')->find($id);
+        if (!$portRequest) {
+            return back()->with('error', 'Demande de port non trouvée');
         }
 
-        $portReq->status = StatusEnum::REJECTED->value;
-        if ($reason) {
-            $portReq->reason = $reason;
-        }
-        $portReq->save();
-        return redirect(route('admin.requests.index'))->with('success', "La demande à bien été rejetée");
+        // if ($portRequest->status !== StatusEnum::PENDING->value) {
+        //     return back()->with('error', 'Cette demande a déjà été traitée');
+        // }
+
+        $portRequest->update([
+            'status' => StatusEnum::REJECTED->value,
+            'reason' => $request->input('reason'),
+        ]);
+
+        // Envoyer une notification à l'utilisateur
+        $portRequest->user->notify(
+            new PortRequestStatusNotification(
+                $portRequest,
+                'rejected',
+                $request->input('reason')
+            )
+        );
+
+        return back()->with('success', 'La demande a été rejetée avec succès');
     }
 }

@@ -17,20 +17,32 @@ class CasAuth
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (FacadesSession::exists("cas_user")) {
+        if (FacadesSession::exists("cas_user") && Auth::check()) {
             return $next($request);
         }
-        if (!cas()->checkAuthentication()) {
-            if ($request->ajax() || $request->wantsJson()) {
-                return response('Unauthorized', 401);
+
+        if (cas()->isMasquerading()) {
+            $casUser = "liam.ghoggal";
+            $fullName = "Liam Ghoggal";
+            $email = "liam.ghoggal@univ-paris13.fr";
+        } else {
+            if (!cas()->checkAuthentication()) {
+                if ($request->ajax() || $request->wantsJson()) {
+                    return response('Unauthorized', 401);
+                }
+
+                cas()->authenticate();
             }
 
-            cas()->authenticate();
+            $casUser = cas()->user();
+            $fullName = cas()->getAttribute('displayName');
+            $email = cas()->getAttribute('mail');
         }
 
-        $casUser = cas()->user();
-        $fullName = cas()->getAttribute('displayName');
-        $email = cas()->getAttribute('mail');
+        if (!isset($email) || $email === '') {
+            return response('Unauthorized', 401);
+        }
+
 
         $user = User::firstOrCreate(
             ['email' => $email],

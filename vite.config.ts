@@ -23,12 +23,12 @@ export default defineConfig({
         },
     },
     server: {
-        host: 'dev.univ-paris13.fr',
+        host: 'dev.univ-spn.fr',
         port: 5173,
         allowedHosts: true,
         cors: {
-            origin: 'http://dev.univ-paris13.fr:8000',
+            origin: 'http://dev.univ-spn.fr',
             credentials: true,
-        }
+        },
     },
 });

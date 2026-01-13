@@ -6,8 +6,13 @@ use App\Enums\StatusEnum;
 use App\Http\Requests\StorePortRequest as StorePortRequest;
 use App\Http\Resources\PortRequestResource;
 use App\Models\PortRequest;
+use App\Models\User;
+use App\Notifications\NewPortRequestNotification;
+use App\Notifications\PortRequestStatusNotification;
+use App\Notifications\RequestCreated;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Notification;
 
 class PortRequestController extends Controller
 {
@@ -64,17 +69,34 @@ class PortRequestController extends Controller
         if (!$user) {
             return redirect("/")->with("flash.error", "Utilisateur non authentifié");
         }
-        $portRequest = new PortRequest([
-            "ip_address" => $request->ip_address,
-            "fqdn" => $request->fqdn,
-            "ports" => json_encode($request->ports),
-            "vlan" => $request->vlan,
-            "description" => $request->description,
-        ]);
+        // Créer la demande avec les données validées
+        $portRequest = new PortRequest();
+        $portRequest->ip_address = $request->validated('ip_address');
+        $portRequest->fqdn = $request->validated('fqdn');
+        $portRequest->ports = json_encode($request->validated('ports'));
+        $portRequest->vlan = $request->validated('vlan');
+        $portRequest->description = $request->validated('description');
+        $portRequest->exposed = (bool)$request->validated('exposed', false);
+        
         $portRequest->user()->associate($user->id);
         $portRequest->save();
-        return redirect(route('request.index'))->with('success', "Votre demande à bien été enregistrée");
-        // Logic to store a new port request
+
+        // Envoyer une notification à l'équipe réseau
+        $networkEmail = 'liam.ghoggal@univ-paris13.fr';
+        
+        // Si l'exposition est publique, ajouter rssi@univ-paris13.fr en copie
+        $recipients = [$networkEmail];
+        if ($portRequest->exposed) {
+            $recipients[] = 'liam.ghoggal@univ-paris13.fr';
+        }
+        
+        // Envoyer les notifications
+        foreach ($recipients as $email) {
+            Notification::route('mail', $email)
+                ->notify(new RequestCreated($portRequest));
+        }
+
+        return redirect(route('request.index'))->with('success', "Votre demande a bien été enregistrée");
     }
 
     public function update(StorePortRequest $request, $id)
@@ -83,9 +105,10 @@ class PortRequestController extends Controller
         if ($portRequest->status !== StatusEnum::PENDING->value) {
             return redirect(route('request.index'))->with('error', "Vous ne pouvez pas éditer une demande déjà traitée");
         }
+        $validated = $request->validated();
         $portRequest->update([
-            ...$request->validated(),
-            "ports" => json_encode($request->ports),
+            ...$validated,
+            "ports" => json_encode($validated['ports']),
         ]);
         return redirect(route('request.index'))->with('success', "Votre demande à bien été mise à jour");
     }

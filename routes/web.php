@@ -4,6 +4,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AdminUsersController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\PortRequestController;
+use App\Http\Middleware\CasAuth as MiddlewareCasAuth;
 use App\Http\Middleware\EnsureIsAdmin;
 use Illuminate\Support\Facades\Route;
 
@@ -21,7 +22,7 @@ Route::resource('demandes', PortRequestController::class)
         'edit' => 'request.edit',
         'update' => 'request.update',
         'destroy' => 'request.destroy',
-    ]);
+    ])->middleware(MiddlewareCasAuth::class);
 
 Route::get('/admin/users', [AdminUsersController::class, "index"])->name('admin.users.index')->middleware(EnsureIsAdmin::class);
 Route::post('/admin/users', [AdminUsersController::class, "store"])->name('admin.users.store')->middleware(EnsureIsAdmin::class);
