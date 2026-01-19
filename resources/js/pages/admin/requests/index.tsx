@@ -14,7 +14,7 @@ interface IAdminRequestsHome {
 
 function AdminRequestsHome({ requests }: IAdminRequestsHome) {
 
-    const { filters, updateFilters } = useServerFilters<Record<string, undefined | string | number>>({ search: "", page: requests.meta.current_page, status: undefined, exposed: undefined })
+    const { filters, updateFilters } = useServerFilters<Record<string, undefined | string | number>>({ search: "", port: "", page: requests.meta.current_page, status: undefined, exposed: undefined })
 
     const handleSearchChange = (value: string) => {
         updateFilters({
@@ -30,6 +30,13 @@ function AdminRequestsHome({ requests }: IAdminRequestsHome) {
         })
     }
 
+    const handlePortChange = (value: string) => {
+        updateFilters({
+            port: value,
+            page: 1,
+        })
+    }
+
     const handleExposedChange = (value: string) => {
         updateFilters({
             exposed: value,
@@ -42,7 +49,10 @@ function AdminRequestsHome({ requests }: IAdminRequestsHome) {
                 <h1 className="title">Administration des demandes</h1>
                 {/* Filters */}
                 <div className='w-full flex items-end sm:justify-between gap-5 flex-col sm:flex-row pb-5'>
-                    <Input value={filters.search} onClear={() => handleSearchChange("")} onChange={(e) => handleSearchChange(e.target.value)} placeholder='Recherche' containerClassName='w-full sm:w-1/2' />
+                    <div className='w-full sm:w-1/2 flex flex-col sm:flex-row gap-3'>
+                        <Input value={filters.search} onClear={() => handleSearchChange("")} onChange={(e) => handleSearchChange(e.target.value)} placeholder='Recherche' containerClassName='w-full sm:w-1/2' />
+                        <Input value={filters.port ?? ""} onClear={() => handlePortChange("")} onChange={(e) => handlePortChange(e.target.value)} placeholder='Port' type='number' containerClassName='w-full sm:w-1/2' />
+                    </div>
                     <div className='flex items-center gap-5 flex-row-reverse'>
                         <div className='flex flex-col gap-2'>
                             <Label htmlFor='status' className='font-semibold text-xs'>Statut</Label>

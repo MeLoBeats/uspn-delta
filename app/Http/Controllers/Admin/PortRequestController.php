@@ -15,10 +15,19 @@ class PortRequestController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
+        $portFilter = $request->input('port');
+
         $requests = PortRequest::with('user')
             ->orderBy('created_at', 'desc')
+            ->when($portFilter !== null && $portFilter !== '', function ($query) use ($portFilter) {
+                $portFilter = preg_replace('/\D/', '', (string) $portFilter);
+                if ($portFilter === '') {
+                    return $query;
+                }
+                return $query->whereRaw('ports ILIKE ?', ['%"port":' . $portFilter . '%']);
+            })
             ->paginate(15);
             
         return view('admin.requests.index', compact('requests'));

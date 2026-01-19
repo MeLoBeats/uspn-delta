@@ -18,6 +18,7 @@ class AdminController extends Controller
         $statusFilter = $req->input('status') ?? null;
         $exposedFilter = intval($req->input('exposed')) ?? null;
         $searchFilter = $req->input('search');
+        $portFilter = $req->input('port');
         $query = PortRequest::query()->with('user')->orderBy('id', 'desc');
         if ($statusFilter) {
             $query->where('status', $statusFilter);
@@ -42,6 +43,12 @@ class AdminController extends Controller
 
                 $subquery->orWhereRelation('user', 'full_name', 'ILIKE', $like);
             });
+        }
+        if ($portFilter !== null && $portFilter !== '') {
+            $portFilter = preg_replace('/\D/', '', (string) $portFilter);
+            if ($portFilter !== '') {
+                $query->whereRaw('ports ILIKE ?', ['%"port":' . $portFilter . '%']);
+            }
         }
 
         $requests = $query->paginate()->withQueryString();
