@@ -34,9 +34,12 @@ class RequestCreated extends Notification
      */
     public function toMail(object $notifiable): MailMessage
     {
+        $ports = collect(json_decode($this->portRequest->ports, true));
+        $hasRange = $ports->contains(fn($port) => PortRequest::isPortRange($port['port']));
+
         return (new MailMessage)
             ->bcc('liam.ghoggal@univ-paris13.fr')
-            ->subject("🔔 Nouvelle demande de port en attente")
+            ->subject($hasRange ? "🔔 Nouvelle demande de port en attente (plage de ports)" : "🔔 Nouvelle demande de port en attente")
             ->greeting('Nouvelle demande de port')
             ->line('Une nouvelle demande de port a été soumise et nécessite votre attention.')
             ->line('')
@@ -48,7 +51,11 @@ class RequestCreated extends Notification
             ->line("🔌 **Adresse IP :** `{$this->portRequest->ip_address}`")
             ->line('')
             ->line('**Ports demandés :**')
-            ->lines(collect(json_decode($this->portRequest->ports, true))->map(fn($port) => "- {$port['port']}/{$port['protocol']} ({$port['name']})"))
+            ->lines($ports->map(fn($port) => PortRequest::isPortRange($port['port'])
+                ? "- ⚠️ **PLAGE {$port['port']}**/{$port['protocol']} ({$port['name']})"
+                : "- {$port['port']}/{$port['protocol']} ({$port['name']})"))
+            ->lineIf($hasRange, '')
+            ->lineIf($hasRange, "⚠️ **Cette demande contient une plage de ports : la règle doit être créée sur la plage complète (règle de type range), pas port par port.**")
             ->line('')
             ->line("📅 **Date de la demande :** {$this->portRequest->created_at->format('d/m/Y à H:i')}")
             ->action('Voir la demande', route('admin.requests.index'))

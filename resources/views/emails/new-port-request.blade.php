@@ -20,7 +20,7 @@ Une nouvelle demande d'ouverture de port a été soumise et nécessite votre att
 - **FQDN :** {{ $portRequest->fqdn }}
 - **Ports :**
   @foreach(json_decode($portRequest->ports, true) as $port)
-  - {{ $port['port'] }}/{{ $port['protocol'] }} ({{ $port['name'] }})
+  - {{ \App\Models\PortRequest::isPortRange($port['port']) ? '⚠️ PLAGE ' : '' }}{{ $port['port'] }}/{{ $port['protocol'] }} ({{ $port['name'] }})
   @endforeach
 - **VLAN :** {{ $portRequest->vlan ?? 'Non spécifié' }}
 - **Exposition :** {{ $portRequest->exposed ? 'Publique' : 'Interne' }}

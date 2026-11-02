@@ -25,7 +25,22 @@ class StorePortRequest extends FormRequest
             "ip_address" => "required|ip",
             "fqdn" => "required|string|max:255",
             "ports" => "required|array",
-            "ports.*.port" => "required|integer|min:1|max:65535",
+            // Un port seul ("80") ou une plage ("8000-8100")
+            "ports.*.port" => [
+                "required",
+                "regex:/^\d{1,5}(-\d{1,5})?$/",
+                function (string $attribute, mixed $value, \Closure $fail) {
+                    $bounds = array_map('intval', explode('-', (string) $value));
+                    foreach ($bounds as $bound) {
+                        if ($bound < 1 || $bound > 65535) {
+                            return $fail("Le port doit être compris entre 1 et 65535.");
+                        }
+                    }
+                    if (count($bounds) === 2 && $bounds[0] >= $bounds[1]) {
+                        $fail("Le début de la plage doit être inférieur à la fin.");
+                    }
+                },
+            ],
             "ports.*.name" => "required|string|max:255",
             "ports.*.protocol" => "required|string|in:tcp,udp,all",
             "exposed" => "boolean",
@@ -50,9 +65,7 @@ class StorePortRequest extends FormRequest
             "ports.required" => "Les ports sont requis.",
             "ports.array" => "Les ports doivent être un tableau.",
             "ports.*.port.required" => "Le port est requis.",
-            "ports.*.port.integer" => "Le port doit être un entier.",
-            "ports.*.port.min" => "Le port doit être supérieur ou égal à 1.",
-            "ports.*.port.max" => "Le port doit être inférieur ou égal à 65535.",
+            "ports.*.port.regex" => "Le port doit être un nombre (ex: 80) ou une plage (ex: 8000-8100).",
             "ports.*.name.required" => "Le nom du port est requis.",
             "ports.*.name.string" => "Le nom du port doit être une chaîne de caractères.",
             "ports.*.name.max" => "Le nom du port ne peut pas   dépasser 255 caractères.",
@@ -75,6 +88,18 @@ class StorePortRequest extends FormRequest
         if (is_string($this->ports)) {
             $this->merge([
                 'ports' => json_decode($this->ports, true) ?: [],
+            ]);
+        }
+
+        // Normalise les plages saisies avec des espaces ("8000 - 8100" => "8000-8100")
+        if (is_array($this->ports)) {
+            $this->merge([
+                'ports' => array_map(function ($port) {
+                    if (is_array($port) && isset($port['port'])) {
+                        $port['port'] = preg_replace('/\s+/', '', (string) $port['port']);
+                    }
+                    return $port;
+                }, $this->ports),
             ]);
         }
     }

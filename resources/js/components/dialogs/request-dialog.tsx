@@ -7,7 +7,7 @@ import {
 } from '../ui/dialog'
 import { useForm } from '@inertiajs/react'
 import { Button } from '../ui/button'
-import { PlusIcon, TrashIcon } from 'lucide-react'
+import { LoaderCircleIcon, PlusIcon, TrashIcon } from 'lucide-react'
 import { ProtocolType, UserPortRequest, UserRequest } from '@/types'
 import { useEffect, useMemo, useState } from 'react'
 import FormInput from '../form-input'
@@ -37,11 +37,12 @@ const PortForm = ({ index, port, onChange, onRemove, isLast, isFirst, onAdd, err
         <div className='w-full flex justify-between gap-5 items-end'>
             <FormInput
                 errors={errors}
-                label='Port'
+                label='Port ou plage'
                 name={`ports.${index}.port`}
                 onChange={(e) => onChange(index, { port: e as string })}
                 value={port.port}
-                placeholder='80'
+                placeholder='80 ou 8000-8100'
+                title='Un port seul (ex: 80) ou une plage de ports (ex: 8000-8100)'
                 required
             />
             <FormInput
@@ -84,7 +85,7 @@ function RequestDialog({ open, openChange, request }: RequestDialogProps) {
     const isEdit = useMemo(() => {
         return request !== undefined
     }, [request])
-    const { data, setData, post, put, reset, errors } = useForm({
+    const { data, setData, post, put, reset, errors, processing } = useForm({
         ip_address: request?.ipAddress ?? '',
         fqdn: request?.fqdn ?? '',
         ports: request?.ports ? request.ports.map(p => ({
@@ -274,8 +275,11 @@ function RequestDialog({ open, openChange, request }: RequestDialogProps) {
                         />
                     ))}
 
-                    <Button type='submit' className='w-full'>
-                        {isEdit ? "Valider les changements" : "Créer la demande"}
+                    <Button type='submit' className='w-full' disabled={processing}>
+                        {processing && <LoaderCircleIcon className='animate-spin' />}
+                        {processing
+                            ? "Envoi en cours..."
+                            : isEdit ? "Valider les changements" : "Créer la demande"}
                     </Button>
                 </form>
             </DialogContent>

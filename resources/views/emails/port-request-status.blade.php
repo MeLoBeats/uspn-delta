@@ -33,7 +33,7 @@ Votre demande d'ouverture de port a été rejetée par l'équipe réseau.
 - **FQDN :** {{ $portRequest->fqdn }}
 - **Ports :**
   @foreach(json_decode($portRequest->ports, true) as $port)
-  - {{ $port['port'] }}/{{ $port['protocol'] }} ({{ $port['name'] }})
+  - {{ \App\Models\PortRequest::isPortRange($port['port']) ? '⚠️ PLAGE ' : '' }}{{ $port['port'] }}/{{ $port['protocol'] }} ({{ $port['name'] }})
   @endforeach
 - **VLAN :** {{ $portRequest->vlan ?? 'Non spécifié' }}
 - **Description :** {{ $portRequest->description ?? 'Aucune description fournie' }}

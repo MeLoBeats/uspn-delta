@@ -28,6 +28,14 @@ class PortRequest extends Model
         'exposed' => 'boolean',
     ];
 
+    /**
+     * Indique si la valeur d'un port est une plage ("8000-8100") et non un port unique.
+     */
+    public static function isPortRange(mixed $port): bool
+    {
+        return str_contains((string) $port, '-');
+    }
+
     public function user(): BelongsTo
     {
         return $this->belongsTo(User::class);
